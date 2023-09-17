@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donut Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <svg id="donut-chart"></svg>
+    <script>
+        var dataset = [
+            { label: "Category 1", value: 30 },
+            { label: "Category 2", value: 20 },
+            { label: "Category 3", value: 50 }
+        ];
+
+        var width = 400;
+        var height = 400;
+        var radius = Math.min(width, height) / 2;
+        var innerRadius = 100; // Adjust the inner radius to create a donut chart
+
+        var color = d3.scaleOrdinal()
+            .range(["#ff5733", "#ffab33", "#33ff57"]);
+
+        var svg = d3.select("#donut-chart")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var pie = d3.pie()
+            .value(function (d) { return d.value; });
+        var data = pie(dataset);
+
+        var arc = d3.arc()
+            .outerRadius(radius)
+            .innerRadius(innerRadius);
+
+        var path = svg.selectAll("path")
+            .data(data)
+            .enter()
+            .append("path")
+            .attr("d", arc)
+            .attr("fill", function (d) { return color(d.data.label); });
+
+        var label = d3.arc()
+            .outerRadius(radius - 20) // Adjust the outer radius for labels
+
+        svg.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("transform", function (d) {
+                return "translate(" + label.centroid(d) + ")";
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) { return d.data.label; });
+    </script>
+</body>
+</html>
