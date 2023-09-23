@@ -28,9 +28,7 @@ app.get('/hello',(req,res) => {
     res.send("Hello World!");
 })
 
-app.get('/c',(req,res) => {
-    res.send("hi");
-})
+
 
 
 app.get('/budget',(req,res) => {
